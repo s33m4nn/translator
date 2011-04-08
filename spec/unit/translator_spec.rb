@@ -1,6 +1,12 @@
 require 'spec_helper'
 
 describe Translator do
+  before :all do
+    conn = Mongo::Connection.new.db("translator_test").collection("translations")
+    Translator.current_store = Translator::MongoStore.new(conn)
+    I18n.backend = Translator.setup_backend(I18n::Backend::Simple.new)
+  end
+
   it "should list non-framework keys by default" do
     Translator.keys_for_strings.should include("hello.world")
     Translator.keys_for_strings.should_not include("helpers.submit.update")
