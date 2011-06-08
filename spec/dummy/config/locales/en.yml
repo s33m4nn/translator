@@ -1,7 +1,6 @@
 en:
   hello:
     world: "Hello world!"
-    foo: "Elo!"
   site:
     name: "Some random web site"
   errors:
