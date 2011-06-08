@@ -7,7 +7,7 @@ module Translator
       @keys = Translator.keys_for_strings(:show => params[:show], :filter => params[:key])
       if params[:search]
         @keys = @keys.select {|k|
-          Translator.locales.any? {|locale| I18n.translate("#{k}", locale: locale).to_s.downcase.include?(params[:search].downcase)}
+          Translator.locales.any? {|locale| I18n.translate("#{k}", :locale => locale).to_s.downcase.include?(params[:search].downcase)}
         }
       end
       @keys = paginate(@keys)

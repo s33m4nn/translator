@@ -9,7 +9,7 @@
   <div>
     <%= form_tag translations_path(:show => params[:show]), method: "get" do %>
       <%= label_tag :key, "Filter: " %>
-      <%= text_field_tag :search, params[:search] %>
+      <%= text_field_tag :search, params[:search], :placeholder => "Search for text..." %>
       <%= select_tag :key, options_for_select([nil] + @all_keys.collect {|k| [k, k]}, params[:key]) %>
       <%= submit_tag "Submit" %>
     <% end %>
