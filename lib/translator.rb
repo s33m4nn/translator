@@ -61,7 +61,7 @@ module Translator
             Translator.current_store.keys).map {|k| k.sub(/^\w*\./, '') }.uniq
 
     if options[:filter]
-      keys = keys.select {|k| k[0, options[:filter].size] == options[:filter]}
+      keys = keys.select {|k| k[0, options[:filter].size-1] == options[:filter]}
     end
 
     if options[:show].to_s == "all"
