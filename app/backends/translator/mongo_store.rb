@@ -23,6 +23,10 @@ module Translator
       end
     end
 
+    def searchable?
+      true
+    end
+
     def clear_database
       collection.drop
     end

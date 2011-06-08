@@ -4,7 +4,13 @@ module Translator
 
     def index
       @all_keys = Translator.keys_for_strings(:show => params[:show]).collect {|k| k.sub(/\.[a-z0-9\-_]*$/, "")}.uniq
-      @keys = paginate(Translator.keys_for_strings(:show => params[:show], :filter => params[:key]))
+      @keys = Translator.keys_for_strings(:show => params[:show], :filter => params[:key])
+      if params[:search]
+        @keys = @keys.select {|k|
+          Translator.locales.any? {|locale| I18n.translate("#{k}", locale: locale).to_s.downcase.include?(params[:search].downcase)}
+        }
+      end
+      @keys = paginate(@keys)
       render :layout => Translator.layout_name
     end
 
