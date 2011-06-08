@@ -1,6 +1,11 @@
 en:
   hello:
     world: "Hello world!"
+    elo: "Ziom"
+    foo: "bar"
+    test: 
+      foo: "hee"
+      loo: "asdf"
   site:
     name: "Some random web site"
   errors:
