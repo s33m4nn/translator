@@ -3,7 +3,8 @@ module Translator
     before_filter :auth
 
     def index
-      @keys = paginate(Translator.keys_for_strings(:show => params[:show]))
+      @all_keys = Translator.keys_for_strings(:show => params[:show]).collect {|k| k.sub(/\.[a-z]*/, "")}.uniq
+      @keys = paginate(Translator.keys_for_strings(:show => params[:show], :filter => params[:key]))
       render :layout => Translator.layout_name
     end
 

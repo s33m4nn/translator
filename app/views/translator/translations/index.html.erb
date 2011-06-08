@@ -6,6 +6,14 @@
     <li><%= link_to_unless_current "All Translations", translations_path(:show => "all") %></li>
   </ul>
 
+  <div>
+    <%= form_tag translations_path(:show => params[:show]), method: "get" do %>
+      <%= label_tag :key, "Filter: " %>
+      <%= select_tag :key, options_for_select([nil] + @all_keys.collect {|k| [k, k]}, params[:key]) %>
+      <%= submit_tag "Submit" %>
+    <% end %>
+  </div>
+
   <% @keys.each do |key| %>
     <%= key %>
     <% Translator.locales.each do |locale| %>
