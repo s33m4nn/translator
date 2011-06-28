@@ -17,7 +17,7 @@
   </div>
   <% if params[:show] && params[:show] == 'deleted' %>
     <div>
-      Those translations no longer exist in english translation file. You can delete them from database as application doesn't use them anymore.
+      You can delete those translations from database as application doesn't use them anymore.
     </div>
   <% end %>
 
@@ -29,7 +29,7 @@
         <%= link_to 'destroy', translation_path(id: key.gsub('.','-')),
                       remote: true,
                       method: :delete,
-                      confirm: 'Are you sure? This operation is irrevisible.',
+                      confirm: 'Are you sure? This operation is irreversible.',
                       class: 'button warning',
                       title: 'Clear form database as translation no longer exists in default language file.'
         %>
