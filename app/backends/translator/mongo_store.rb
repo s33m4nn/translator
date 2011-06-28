@@ -23,6 +23,10 @@ module Translator
       end
     end
 
+    def destroy_entry(key)
+      @collection.remove({:_id => key})
+    end
+
     def searchable?
       true
     end

@@ -19,6 +19,14 @@ module Translator
       redirect_to :back unless request.xhr?
     end
 
+    def destroy
+      key = params[:id].gsub('-','.')
+      Translator.locales.each do |locale|
+        Translator.current_store.destroy_entry(locale.to_s + '.' + key)
+      end
+      redirect_to :back unless request.xhr?
+    end
+
     private
 
     def auth

@@ -1,9 +1,10 @@
 <div id='translations'>
   <h1>Translations</h1>
   <ul>
-    <li><%= link_to_unless_current "Application Translations", translations_path(:show => "application") %></li>
-    <li><%= link_to_unless_current "Framework Translations", translations_path(:show => "framework") %></li>
-    <li><%= link_to_unless_current "All Translations", translations_path(:show => "all") %></li>
+    <li><%= link_to_unless_current "All", translations_path(:show => "all") %></li>
+    <li><%= link_to_unless_current "Application", translations_path(:show => "application") %></li>
+    <li><%= link_to_unless_current "Framework", translations_path(:show => "framework") %></li>
+    <li><%= link_to_unless_current "Deleted", translations_path(:show => "deleted") %></li>
   </ul>
 
   <div>
@@ -14,12 +15,29 @@
       <%= submit_tag "Submit" %>
     <% end %>
   </div>
+  <% if params[:show] && params[:show] == 'deleted' %>
+    <div>
+      Those translations no longer exist in english translation file. You can delete them from database as application doesn't use them anymore.
+    </div>
+  <% end %>
 
   <% @keys.each do |key| %>
-    <%= key %>
-    <% Translator.locales.each do |locale| %>
-      <%= render :partial => "form", :locals => {:locale => locale, :key => key} %>
-    <% end %>
+    <div id="<%= key %>" class="translation">
+      <h2><%= key %></h2>
+
+      <% if params[:show] && params[:show] == 'deleted' %>
+        <%= link_to 'destroy', translation_path(id: key.gsub('.','-')),
+                      remote: true,
+                      method: :delete,
+                      confirm: 'Are you sure? This operation is irrevisible.',
+                      class: 'button warning',
+                      title: 'Clear form database as translation no longer exists in default language file.'
+        %>
+      <% end %>
+      <% Translator.locales.each do |locale| %>
+        <%= render :partial => "form", :locals => {:locale => locale, :key => key} %>
+      <% end %>
+    </div>
   <% end %>
 
   <% unless @total_pages < 2 %>

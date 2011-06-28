@@ -54,23 +54,28 @@ module Translator
     @simple_backend.available_locales
 
     flat_translations = {}
-    flatten_keys nil, @simple_backend.instance_variable_get("@translations"), flat_translations
-    flat_translations = flat_translations.delete_if {|k,v| !v.is_a?(String)}
+    flatten_keys nil, @simple_backend.instance_variable_get("@translations")[:en], flat_translations
+    flat_translations = flat_translations.delete_if {|k,v| !v.is_a?(String) }
+    store_keys = Translator.current_store.keys.map {|k| k.sub(/^\w*\./, '')}
 
-    keys = (flat_translations.keys + 
-            Translator.current_store.keys).map {|k| k.sub(/^\w*\./, '') }.uniq
+    keys = if options[:show].to_s == "deleted"
+      store_keys - flat_translations.keys
+    else
+      (store_keys + flat_translations.keys).uniq
+    end
 
     if options[:filter]
       keys = keys.select {|k| k[0, options[:filter].size] == options[:filter]}
     end
 
-    if options[:show].to_s == "all"
-      keys
-    elsif options[:show].to_s == "framework"
-      keys.select {|k| @framework_keys.include?(k) }
-    else
-      keys - @framework_keys
+    case options[:show].to_s
+    when "framework"
+      keys.select! {|k| @framework_keys.include?(k) }
+    when "application"
+      keys -= @framework_keys
     end
+
+    keys || []
   end
 
   def self.layout_name
