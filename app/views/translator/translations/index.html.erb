@@ -42,7 +42,7 @@
 
   <% unless @total_pages < 2 %>
     <% (1..@total_pages).each do |p| %>
-      <%= link_to_unless_current p, translations_path(:show => params[:show], :page => p) %>
+      <%= link_to_unless_current p, translations_path(:show => params[:show], :page => p), :class => "button small" %>
     <% end %>
   <% end %>
 </div>
