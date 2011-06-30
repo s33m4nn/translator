@@ -3,8 +3,10 @@ module Translator
     before_filter :auth
 
     def index
-      @all_keys = Translator.keys_for_strings(:show => params[:show]).collect {|k| k.sub(/\.[a-z0-9\-_]*$/, "")}.uniq
-      @keys = Translator.keys_for_strings(:show => params[:show], :filter => params[:key])
+      section = params[:key].present? && params[:key] + '.'
+      @sections = Translator.keys_for_strings(:show => params[:show])
+      .map {|k| k = k.scan(/^[a-z0-9\-_]*\./)[0]; k ? k.gsub('.', '') : false}.select{|k| k}.uniq.sort
+      @keys = Translator.keys_for_strings(:show => params[:show], :filter => section)
       if params[:search]
         @keys = @keys.select {|k|
           Translator.locales.any? {|locale| I18n.translate("#{k}", :locale => locale).to_s.downcase.include?(params[:search].downcase)}

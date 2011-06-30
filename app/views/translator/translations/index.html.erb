@@ -11,7 +11,7 @@
     <%= form_tag translations_path(:show => params[:show]), method: "get" do %>
       <%= label_tag :key, "Filter: " %>
       <%= text_field_tag :search, params[:search], :placeholder => "Search for text..." %>
-      <%= select_tag :key, options_for_select([nil] + @all_keys.collect {|k| [k, k]}, params[:key]) %>
+      <%= select_tag :key, options_for_select(@sections.collect {|k| [k.humanize, k]}.unshift(["All sections", nil]), params[:key]) %>
       <%= submit_tag "Submit" %>
     <% end %>
   </div>
@@ -22,8 +22,18 @@
   <% end %>
 
   <% @keys.each do |key| %>
-    <div id="<%= key %>" class="translation">
-      <h2><%= key %></h2>
+    <div id="<%=key  %>" class="translation">
+      <h2>
+        <%-
+          parts = key.split('.').map(&:humanize)
+          if params[:key].present?
+            parts.delete_at(0)
+          elsif parts.size > 1
+            parts[0] = link_to(parts[0], translations_path(:show => params[:show], :key => parts[0].underscore), :title => "Go to section " + parts[0])
+          end
+        %>
+        <%= parts.join(' > ').html_safe %>
+      </h2>
 
       <% if params[:show] && params[:show] == 'deleted' %>
         <%= link_to 'destroy', translation_path(id: key.gsub('.','-')),
