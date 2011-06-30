@@ -22,7 +22,7 @@
   <% end %>
 
   <% @keys.each do |key| %>
-    <div id="<%=key  %>" class="translation">
+    <div id="<%= key.gsub('.','-')  %>" class="translation">
       <h2>
         <%-
           parts = key.split('.').map(&:humanize)
