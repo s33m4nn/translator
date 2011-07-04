@@ -4,9 +4,10 @@ module Translator
 
     def index
       section = params[:key].present? && params[:key] + '.'
-      @sections = Translator.keys_for_strings(:show => params[:show])
+      params[:group] = "all" unless params["group"]
+      @sections = Translator.keys_for_strings(:group => params[:group])
       .map {|k| k = k.scan(/^[a-z0-9\-_]*\./)[0]; k ? k.gsub('.', '') : false}.select{|k| k}.uniq.sort
-      @keys = Translator.keys_for_strings(:show => params[:show], :filter => section)
+      @keys = Translator.keys_for_strings(:group => params[:group], :filter => section)
       if params[:search]
         @keys = @keys.select {|k|
           Translator.locales.any? {|locale| I18n.translate("#{k}", :locale => locale).to_s.downcase.include?(params[:search].downcase)}

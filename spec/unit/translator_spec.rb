@@ -17,12 +17,12 @@ describe Translator do
   end
 
   it "should be possible to list framework keys with option" do
-    Translator.keys_for_strings(:show => :framework).should_not include("hello.world")
-    Translator.keys_for_strings(:show => :framework).should include("helpers.submit.update")
+    Translator.keys_for_strings(:group => :framework).should_not include("hello.world")
+    Translator.keys_for_strings(:group => :framework).should include("helpers.submit.update")
   end
 
   it "should be possible to list all keys with option" do
-    Translator.keys_for_strings(:show => :all).should include("hello.world")
-    Translator.keys_for_strings(:show => :all).should include("helpers.submit.update")
+    Translator.keys_for_strings(:group => :all).should include("hello.world")
+    Translator.keys_for_strings(:group => :all).should include("helpers.submit.update")
   end
 end

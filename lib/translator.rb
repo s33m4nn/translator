@@ -58,17 +58,17 @@ module Translator
     flat_translations = flat_translations.delete_if {|k,v| !v.is_a?(String) }
     store_keys = Translator.current_store.keys.map {|k| k.sub(/^\w*\./, '')}
 
-    keys = if options[:show].to_s == "deleted"
+    keys = if options[:group].to_s == "deleted"
       store_keys - flat_translations.keys
     else
-      (store_keys + flat_translations.keys).uniq
-    end
+      store_keys + flat_translations.keys
+    end.uniq
 
     if options[:filter]
       keys = keys.select {|k| k[0, options[:filter].size] == options[:filter]}
     end
 
-    case options[:show].to_s
+    case options[:group].to_s
     when "framework"
       keys.select! {|k| @framework_keys.include?(k) }
     when "application"
