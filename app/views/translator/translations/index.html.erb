@@ -36,7 +36,7 @@
       </h2>
 
       <% if params[:group] && params[:group] == 'deleted' %>
-        <%= link_to 'destroy', translation_path(id: key.gsub('.','-')),
+        <%= link_to 'destroy', translation_path(:id => key.gsub('.','-')),
                       remote: true,
                       method: :delete,
                       confirm: 'Are you sure? This operation is irreversible.',
