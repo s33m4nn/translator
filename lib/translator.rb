@@ -56,7 +56,7 @@ module Translator
     flat_translations = {}
     flatten_keys nil, @simple_backend.instance_variable_get("@translations")[:en], flat_translations
     flat_translations = flat_translations.delete_if {|k,v| !v.is_a?(String) }
-    store_keys = Translator.current_store.keys.map {|k| k.sub(/^\w*\./, '')}
+    store_keys = Translator.current_store.keys.map {|k| k.sub(/^[a-z0-9\-_]*\./i, '')}
 
     keys = if options[:group].to_s == "deleted"
       store_keys - flat_translations.keys
