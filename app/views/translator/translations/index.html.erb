@@ -48,7 +48,11 @@
 
   <% unless @total_pages < 2 %>
     <% (1..@total_pages).each do |p| %>
-      <%= link_to_unless_current p, translations_path(:group => params[:group], :page => p), :class => "button small" %>
+      <%= link_to_unless_current p, translations_path(:group => params[:group],
+                                                      :search => params[:search],
+                                                      :key => params[:key],
+                                                      :translated => params[:translated],
+                                                      :page => p), :class => "button small" %>
     <% end %>
   <% end %>
 </div>
