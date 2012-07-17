@@ -22,7 +22,8 @@ module Translator
 
       if params[:translated] == '0'
         @keys = @keys.select {|k|
-          Translator.locales.any? {|locale| (begin I18n.backend.translate(locale, "#{k}") rescue nil; end).blank? }
+          Translator.locales.any? {|locale| (begin I18n.backend.translate(locale, "#{k}") rescue nil; end).blank? ||
+                                             (locale != 'en-US' && (begin I18n.backend.translate(locale, "#{k}") rescue nil; end) == (begin I18n.backend.translate('en-US', "#{k}") rescue nil; end)) }
         }
       end
 
