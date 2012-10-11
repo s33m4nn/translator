@@ -18,6 +18,12 @@ Create initializer, for example config/initializers/translator.rb:
 In Rails > 3.1 you should mount the translator Engine in config/routes.rb:
     mount Translator::Engine, :to => '/admin' # will provide a /admin/translations path
 
+You might also need to override default yaml parser by adding the line to Gemfile:
+    gem 'yajl-ruby', require: 'yajl/json_gem'
+
+There also appear to be problems with i18n v0.6.1 (truncated translations), so you might need to force v0.6.0:
+   gem 'i18n', '0.6.0'
+
 === For Redis:
 
 Create Gemfile and run "bundle":
