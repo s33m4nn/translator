@@ -11,13 +11,11 @@ if RUBY_VERSION < '1.9'
   gem "ruby-debug", ">= 0.10.3"
 end
 
-gem "diff-lcs", "1.1.2", :require => nil
-gem "rspec-rails"
+gem "diff-lcs", "1.1.3", :require => nil
+gem "rspec-rails", '>= 2.10.1'
 
-gem "steak",  :git => "git://github.com/cavalle/steak.git"
-gem "capybara", "0.3.9", :require => nil
+gem "capybara", "1.1.2", :require => nil
 gem "timecop", "0.3.5"
-gem "mongrel", "1.2.0.pre2"
 gem "cgi_multipart_eof_fix"
 gem "fastthread"
 gem "pry"
