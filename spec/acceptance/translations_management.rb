@@ -2,7 +2,7 @@
 #
 shared_examples_for "translations_management" do
   scenario "see translations keys specified in main language yaml file" do
-    page.should have_content "hello.world"
+    page.should have_content "Date > Formats > Default"
   end
 
   scenario "see translations provided in language files" do
@@ -13,6 +13,7 @@ shared_examples_for "translations_management" do
   end
 
   scenario "editing translations" do
+    visit translations_path + "/?utf8=✓&search=&key=&group=application&translated=&commit=Submit"
     within :css, "#pl-hello-world" do
       fill_in "value", :with => "Elo ziomy"
       click_button "Save"
@@ -29,16 +30,17 @@ shared_examples_for "translations_management" do
     page.should have_content("Elo ziomy")
   end
 
-  scenario "see only app translations by default, Rails ones after changing tab" do
-    page.should_not have_content("date.formats")
-    click_link "Framework Translations"
-    page.should have_content("date.formats")
+  scenario "see only all translations by default, app ones after selecting from dropdown" do
+    page.should have_content("Date > Formats")
+    select "Application", from: "group"
+    click_button "Submit"
+    page.should_not have_content("Date > Formats")
+    page.should have_content("World")
   end
 
   scenario "paginate translations, 50 on every page" do
-    click_link "Framework Translations"
-    page.should_not have_content("helpers.submit.submit")
+    page.should have_content("Date > Formats")
     click_link "2"
-    page.should have_content("helpers.submit.submit")
+    page.should_not have_content("Date > Formats")
   end
 end
