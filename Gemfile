@@ -18,4 +18,4 @@ gem "timecop", "0.3.5"
 gem "mongrel", "1.2.0.pre2"
 gem "cgi_multipart_eof_fix"
 gem "fastthread"
-
+gem "selenium-webdriver", '2.25.0'
