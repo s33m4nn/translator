@@ -1,6 +1,6 @@
 source "http://rubygems.org"
 
-gem "rails", "3.0.5"
+gem "rails", "3.2.7"
 gem "mongo", "1.1"
 gem "bson_ext", ">=1.0.5"
 gem "redis"
@@ -18,4 +18,5 @@ gem "timecop", "0.3.5"
 gem "mongrel", "1.2.0.pre2"
 gem "cgi_multipart_eof_fix"
 gem "fastthread"
+gem "pry"
 
