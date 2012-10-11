@@ -5,6 +5,7 @@
     <title>Translator</title>
     <%= csrf_meta_tag %>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+    <script type="text/javascript" src="http://www.jacklmoore.com/autosize/jquery.autosize.js"></script>
     <script type="text/javascript">
 /**
  * Unobtrusive scripting adapter for jQuery
@@ -166,7 +167,7 @@
 		var name = button.attr('name'), data = name ? {name:name, value:button.val()} : null;
 		button.closest('form').data('ujs:submit-button', data);
 	});
-	
+
 	$('form').live('ajax:beforeSend.rails', function(event) {
 		if (this == event.target) disableFormElements($(this));
 	});
@@ -174,7 +175,11 @@
 	$('form').live('ajax:complete.rails', function(event) {
 		if (this == event.target) enableFormElements($(this));
 	});
+  $(document).ready(function() {
+    $('textarea').autosize();
+  });
 })( jQuery );
+
     </script>
     <style type='text/css'>
 /*
@@ -197,7 +202,7 @@ html{
 */
 /*
 	TODO test putting a class on HEAD.
-		- Fails on FF. 
+		- Fails on FF.
 */
 body,
 div,
@@ -423,7 +428,10 @@ input.button {
 .button.warning {
   color: red;
 }
-
+textarea {
+  width: 780px;
+  height: 1.2em;
+}
     </style>
   </head>
   <body>
