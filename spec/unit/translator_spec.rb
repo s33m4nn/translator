@@ -7,9 +7,9 @@ describe Translator do
     I18n.backend = Translator.setup_backend(I18n::Backend::Simple.new)
   end
 
-  it "should list non-framework keys by default" do
+  it "should list all keys by default" do
     Translator.keys_for_strings.should include("hello.world")
-    Translator.keys_for_strings.should_not include("helpers.submit.update")
+    Translator.keys_for_strings.should include("helpers.submit.update")
   end
 
   it "should list only keys that their values are Strings in Yaml files" do

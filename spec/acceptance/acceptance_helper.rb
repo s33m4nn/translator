@@ -1,11 +1,10 @@
 require File.dirname(__FILE__) + "/../spec_helper"
-require "steak"
 require 'capybara/rails'
 
 Capybara.default_driver = :selenium
 
 RSpec.configure do |config|
-  config.include Capybara
+  config.include Capybara::DSL
 end
 
 RSpec.configuration.include Capybara, :type => :acceptance

@@ -1,5 +1,5 @@
-module HelperMethods
-  # Put helper methods you need to be available in all tests here.
+# Put helper methods you need to be available in all tests here.
+def translations_path
+  '/translations'
 end
 
-RSpec.configuration.include HelperMethods, :type => :acceptance
