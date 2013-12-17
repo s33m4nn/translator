@@ -5,7 +5,8 @@
     <title>Translator</title>
     <%= csrf_meta_tag %>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
-    <script type="text/javascript" src="http://www.jacklmoore.com/autosize/jquery.autosize.js"></script>
+    <%= javascript_include_tag "jquery.autosize-min" %>
+    <%= javascript_include_tag "iframeResizer.contentWindow" %>
     <script type="text/javascript">
 /**
  * Unobtrusive scripting adapter for jQuery
