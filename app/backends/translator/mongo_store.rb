@@ -9,7 +9,7 @@ module Translator
     end
 
     def []=(key, value)
-      value = nil if value.blank?
+      value = nil if value == '' || value.nil?
       collection.update({:_id => key},
                         {'$set' => {:value => ActiveSupport::JSON.encode(value)}},
                         {:upsert => true, :safe => true})

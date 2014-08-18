@@ -9,7 +9,7 @@ module Translator
     end
 
     def []=(key, value)
-      value = nil if value.blank?
+      value = nil if value == '' || value.nil?
       @redis[key] = ActiveSupport::JSON.encode(value)
     end
 
