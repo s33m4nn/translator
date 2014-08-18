@@ -3,6 +3,7 @@
     <h1>Translations</h1>
 
     <%= form_tag translations_path, :method => "get" do %>
+      <%= link_to 'Export/import', '#', onclick: '$("#exports").toggle(); return false', style: 'float: right' %>
       <%= label_tag :key, "Filter: " %>
       <%= text_field_tag :search, params[:search], :placeholder => "Search for text..." %>
       <%= select_tag :key, options_for_select(@sections.collect {|k| [k.humanize, k]}.unshift(["All sections", nil]), params[:key]) %>
@@ -10,6 +11,17 @@
       <%= select_tag :translated, options_for_select([["Translation state", nil], ['Fully translated', '1'], ['Missing translations', '0']], params[:translated]) %>
       <%= submit_tag "Submit" %>
     <% end %>
+    <div style='display: none; padding: 40px;' id='exports'>
+      <%= form_tag import_translations_path, method: "POST", multipart: true do %>
+
+        <h2>Export</h2>
+        <%= link_to "Export all translations", export_translations_path %>
+        <h2 style='margin-top: 20px'>Import</h2>
+        <%= file_field_tag :file %>
+        <%= submit_tag 'Submit' %>
+      <% end %>
+
+    </div>
   </div>
   <% if params[:group] && params[:group] == 'deleted' %>
     <div>

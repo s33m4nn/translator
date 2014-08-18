@@ -32,6 +32,36 @@ module Translator
       render :layout => Translator.layout_name
     end
 
+    def export
+      @keys = Translator.keys_for_strings
+
+      headers["Content-Disposition"] = "attachment; filename=\"translations.json\""
+
+      render json: Hash[@keys.map { |key|
+        [
+          key,
+
+          Hash[Translator.locales.map do |locale|
+            [
+              locale,
+              begin I18n.backend.translate locale, key; rescue; end
+            ]
+          end]
+        ]
+      }].to_json
+    end
+
+    def import
+      hash = JSON.parse(params[:file].read)
+
+      hash.each do |key_suffix, values|
+        values.each do |key_prefix, value|
+          Translator.current_store["#{key_prefix}.#{key_suffix}"] = value unless value.nil?
+        end
+      end
+      redirect_to :back
+    end
+
     def create
       Translator.current_store[params[:key]] = params[:value]
       redirect_to :back unless request.xhr?
