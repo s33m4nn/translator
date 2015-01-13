@@ -54,7 +54,7 @@ module Translator
     @simple_backend.available_locales
 
     flat_translations = {}
-    flatten_keys nil, @simple_backend.instance_variable_get("@translations")[:en], flat_translations
+    flatten_keys nil, Translator.get_translations, flat_translations
     flat_translations = flat_translations.delete_if {|k,v| !v.is_a?(String) }
     store_keys = Translator.current_store.keys.map {|k| k.sub(/^[a-z0-9\-_]*\./i, '')}
 
@@ -83,6 +83,10 @@ module Translator
   end
 
   private
+  
+  def self.get_translations
+    @simple_backend.instance_variable_get("@translations")[:en]
+  end
 
   def self.flatten_keys(current_key, hash, dest_hash)
     hash.each do |key, value|
