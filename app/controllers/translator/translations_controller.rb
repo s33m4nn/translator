@@ -78,7 +78,7 @@ module Translator
     private
 
     def auth
-      Translator.auth_handler.bind(self).call if Translator.auth_handler.is_a? Proc
+      self.instance_eval(&Translator.auth_handler) if Translator.auth_handler.is_a? Proc
     end
 
     def paginate(collection)
@@ -89,4 +89,3 @@ module Translator
     end
   end
 end
-
