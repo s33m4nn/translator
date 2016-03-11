@@ -1,13 +1,15 @@
 module Translator
-  class TranslationsController < ApplicationController
+  class TranslationsController < BackendController
     before_filter :auth
 
     def index
       section = params[:key].present? && params[:key] + '.'
+      group = "application"
       params[:group] = "all" unless params["group"]
-      @sections = Translator.keys_for_strings(:group => params[:group]).map {|k| k = k.scan(/^[a-zA-Z0-9\-_]*\./)[0]; k ? k.gsub('.', '') : false}.select{|k| k}.uniq.sort
-      @groups = ["framework", "application", "deleted"]
-      @keys = Translator.keys_for_strings(:group => params[:group], :filter => section)
+      @sections = Translator.keys_for_strings(:group => group).map {|k| k = k.scan(/^[a-zA-Z0-9\-_]*\./)[0]; k ? k.gsub('.', '') : false}.select{|k| k}.uniq.sort
+      # @groups = ["application", "deleted"]
+      @keys = Translator.keys_for_strings(:group => group, :filter => section)
+
       if params[:search]
         @keys = @keys.select {|k|
           Translator.locales.any? {|locale| I18n.translate("#{k}", :locale => locale).to_s.downcase.include?(params[:search].downcase)}
@@ -26,8 +28,7 @@ module Translator
         }
       end
 
-
-      @keys = paginate(@keys)
+      @keys = paginate(@keys.sort!)
 
       render :layout => Translator.layout_name
     end
@@ -78,7 +79,7 @@ module Translator
     private
 
     def auth
-      self.instance_eval(&Translator.auth_handler) if Translator.auth_handler.is_a? Proc
+      Translator.auth_handler.bind(self).call if Translator.auth_handler.is_a? Proc
     end
 
     def paginate(collection)
@@ -89,3 +90,4 @@ module Translator
     end
   end
 end
+
