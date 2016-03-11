@@ -1,28 +1,44 @@
 <div id='translations'>
-  <div id="header">
-    <h1>Translations</h1>
+  <h1>Translations</h1>
 
-    <%= form_tag translations_path, :method => "get" do %>
-      <%= link_to 'Export/import', '#', onclick: '$("#exports").toggle(); return false', style: 'float: right' %>
-      <%= label_tag :key, "Filter: " %>
-      <%= text_field_tag :search, params[:search], :placeholder => "Search for text..." %>
-      <%= select_tag :key, options_for_select(@sections.collect {|k| [k.humanize, k]}.unshift(["All sections", nil]), params[:key]) %>
-      <%= select_tag :group, options_for_select(@groups.collect {|k| [k.humanize, k]}.unshift(["All groups", nil]), params[:group]) %>
-      <%= select_tag :translated, options_for_select([["Translation state", nil], ['Fully translated', '1'], ['Missing translations', '0']], params[:translated]) %>
-      <%= submit_tag "Submit" %>
-    <% end %>
-    <div style='display: none; padding: 40px;' id='exports'>
-      <%= form_tag import_translations_path, method: "POST", multipart: true do %>
+  <div class='panel panel-default'>
+    <div class='panel-heading' data-toggle='collapse' data-target='#filters-body'>
+      <h3 class='panel-title'>Filters</h3>
+    </div>
 
-        <h2>Export</h2>
-        <%= link_to "Export all translations", export_translations_path %>
-        <h2 style='margin-top: 20px'>Import</h2>
-        <%= file_field_tag :file %>
-        <%= submit_tag 'Submit' %>
+    <div id='filters-body' class='panel-body collapse'>
+      <%= form_tag translations_path, :method => "get", class: 'form-vertical' do %>
+        <%#= link_to 'Export/import', '#', onclick: '$("#exports").toggle(); return false', style: 'float: right' %>
+        <div class='form-group'>
+          <%= label_tag :key, "Filter: ", class: 'control-label' %>
+          <%= text_field_tag :search, params[:search], :placeholder => "Search for text...", class: 'form-control' %>
+        </div>
+
+        <div class='form-group'>
+          <%= select_tag :key, options_for_select(@sections.collect {|k| [k.humanize, k]}.unshift(["All sections", nil]), params[:key]), class: 'form-control' %>
+          <%#= select_tag :group, options_for_select(@groups.collect {|k| [k.humanize, k]}.unshift(["All groups", nil]), params[:group]) %>
+          <%= select_tag :translated, options_for_select([["Translation state", nil], ['Fully translated', '1'], ['Missing translations', '0']], params[:translated]), class: 'form-control' %>
+        </div>
+
+        <div class='form-group'>
+          <%= submit_tag "Submit", class: 'btn btn-default' %>
+        </div>
       <% end %>
 
+      <div style='display: none; padding: 40px;' id='exports'>
+        <%= form_tag import_translations_path, method: "POST", multipart: true do %>
+
+          <h2>Export</h2>
+          <%= link_to "Export all translations", export_translations_path %>
+          <h2 style='margin-top: 20px'>Import</h2>
+          <%= file_field_tag :file %>
+          <%= submit_tag 'Submit' %>
+        <% end %>
+
+      </div>
     </div>
   </div>
+
   <% if params[:group] && params[:group] == 'deleted' %>
     <div>
       You can delete those translations from database as application doesn't use them anymore.
@@ -30,58 +46,73 @@
   <% end %>
 
   <% @keys.each do |key| %>
-    <div id="<%= key.gsub('.','-')  %>" class="translation">
-      <h2>
-        <%-
-          parts = key.split('.').map(&:humanize)
-          if params[:key].present?
-            parts.delete_at(0)
-          elsif parts.size > 1
-            parts[0] = link_to(parts[0], translations_path(:group => params[:group], :key => parts[0].underscore), :title => "Go to section " + parts[0])
-          end
-        %>
-        <%= parts.join(' > ').html_safe %>
-      </h2>
+    <div class='col-lg-3 col-md-5'>
+      <div id="<%= key.gsub('.','-')  %>" class='translation panel panel-default'>
+        <div class='panel-heading'>
+          <h3 class='panel-title'>
+            <%-
+              parts = key.split('.').map(&:humanize)
+              if params[:key].present?
+                parts.delete_at(0)
+              elsif parts.size > 1
+                parts[0] = link_to(parts[0], translations_path(:group => params[:group], :key => parts[0].underscore), :title => "Go to section " + parts[0])
+              end
+            %>
+            <%= parts.join(' > ').html_safe %>
+          </h3>
+        </div>
 
-      <% if params[:group] && params[:group] == 'deleted' %>
-        <%= link_to 'destroy', translation_path(:id => key.gsub('.','-')),
-                      :remote => true,
-                      :method => :delete,
-                      :confirm => 'Are you sure? This operation is irreversible.',
-                      :class => 'button warning',
-                      :title => 'Clear form database as translation no longer exists in default language file.'
-        %>
-      <% end %>
-      <% Translator.locales.each do |locale| %>
-        <%= render :partial => "form", :locals => {:locale => locale, :key => key} %>
-      <% end %>
+        <div class='panel-body'>
+          <% if params[:group] && params[:group] == 'deleted' %>
+            <%= link_to 'destroy', translation_path(:id => key.gsub('.','-')),
+                          :remote => true,
+                          :method => :delete,
+                          :confirm => 'Are you sure? This operation is irreversible.',
+                          :class => 'button warning',
+                          :title => 'Clear form database as translation no longer exists in default language file.'
+            %>
+          <% end %>
+          <% Translator.locales.each do |locale| %>
+            <%= render :partial => "form", :locals => {:locale => locale, :key => key} %>
+          <% end %>
+        </div>
+        <div class='clear'></div>
+      </div>
     </div>
   <% end %>
 
   <% unless @total_pages < 2 %>
-    <% (1..@total_pages).each do |p| %>
-      <%= link_to_unless_current p, translations_path(:group => params[:group],
-                                                      :search => params[:search],
-                                                      :key => params[:key],
-                                                      :translated => params[:translated],
-                                                      :page => p), :class => "button small" %>
-    <% end %>
+    <div class='col-sm-10'>
+      <ul class='pagination'>
+      <% (1..@total_pages).each do |p| %>
+        <% path = translations_path(:group => params[:group],
+                                    :search => params[:search],
+                                    :key => params[:key],
+                                    :translated => params[:translated],
+                                    :page => p) %>
+        <% if current_page?(path) %>
+          <li class='active'>
+            <span><%= p %></span>
+          </li>
+        <% else %>
+          <li>
+            <%= link_to_unless_current p, path %>
+          </li>
+        <% end %>
+      <% end %>
+    </div>
   <% end %>
+
 </div>
 
 <div id="footer">
-  <div id="shameless">
-    Brought to you by <%= link_to "AmberBit", "http://amberbit.com" %> Ruby on Rails web development team.
-    <br/>
-    2010-2011 &copy; Hubert Łępicki &lt;hubert.lepicki@amberbit.com&gt;
-  </div>
-  <%= link_to image_tag("http://amberbit.com/images/logo.png"), "http://amberbit.com" %>
 </div>
 
-<script type="text/javascript">
-  $("a[data-recover]").live("click", function(event) {
-    event.preventDefault();
-    $("textarea", $(this).parents("form")).val($(this).attr("data-recover"));
-  });
-</script>
-
+<% content_for :javascripts do %>
+  <script type="text/javascript">
+    $(document).on("click", "a[data-recover]", function(event) {
+      event.preventDefault();
+      $("textarea", $(this).parents("form")).val($(this).attr("data-recover"));
+    });
+  </script>
+<% end %>
